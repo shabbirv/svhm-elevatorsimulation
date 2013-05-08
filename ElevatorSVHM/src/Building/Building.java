@@ -2,8 +2,6 @@ package Building;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import Utils.Utilities;
-
 import Elevator.Elevator;
 import Elevator.ElevatorFactory;
 import Elevator.ElevatorImpl;
@@ -11,12 +9,14 @@ import Floor.FloorListener;
 import Floor.FloorListenerImpl;
 import Floor.FloorManager;
 import Floor.FloorRequestDTO;
+import Utils.Utilities;
 
 /**
 * This is the building that contains the elevator simulation, and the elevators are created and held in here.
 * 
 * @author Shabbir Vijapura/Harry Masuta
 */
+
 public class Building implements FloorListener {
 	
 	/**
@@ -45,13 +45,16 @@ public class Building implements FloorListener {
 	 * @param f - Number of floors that are needed/wanted in the simulation overall
 	 * @param e - Number of elevators that are needed/wanted in the sumulation overall
 	 */
-	public Building (int f, int e) {
+	public Building (int f, int e) throws IllegalArgumentException {
+		if (f <= 0 || e <= 0) {
+			throw new IllegalArgumentException("Number of Floors or Elevators cannot be negative");
+		}
 		
 		//Create a building with passed in amount of floors and elevators
-		System.out.println("Creating Building");
+		System.out.printf("%s Creating Building\n", Utilities.timeToString());
 		setNumOfFloors(f);
 		setNumOfElevators(e);
-		System.out.println("Building created, " + numOfFloors + " Floors, " + numOfElevators + " Elevators");
+		System.out.printf("%s Building created, " + numOfFloors + " Floors, " + numOfElevators + " Elevators\n", Utilities.timeToString());
 		
 		//Add Listener for changes in floor
 		floorListener.addListener(this);
@@ -70,7 +73,15 @@ public class Building implements FloorListener {
 		}
 
 	}
-
+	
+	/**
+	 * Public method returns the total amount of floors in a Building
+	 * @return numOfFloors
+	 */
+	public int getNumOfFloors() {
+		return this.numOfFloors;
+	}
+	
 	/**
 	 * Public method that sets the number of floors
 	 * @param numOfFloors - Tells us the total number of floors.
@@ -81,6 +92,14 @@ public class Building implements FloorListener {
 		FloorManager m = FloorManager.getInstance();
 		m.setNumberOfFloors(numOfFloors);
 		this.numOfFloors = numOfFloors;
+	}
+	
+	/**
+	 * Public method returns the total amount of elevators in a Building
+	 * @return numOfElevators
+	 */
+	public int getNumOfElevators() {
+		return this.numOfElevators;
 	}
 
 	/**
@@ -101,10 +120,14 @@ public class Building implements FloorListener {
 	
 	/**
 	 * Public void method that takes two parameters and moves the elevator from floor to floor
-	 * @param elevatorNumber - Gives the unique elevatorNumber, 1, 2, 3, 4, 5 or 6
+	 * @param elevatorNumber - Pass in which elevator number we want to move
 	 * @param floorNumber - Gives the floor number that the elevator will be moving towards.
 	 */
 	public void moveElevatorToFloor(int elevatorNumber, int floorNumber) {
+		if (elevatorNumber <= 0 || floorNumber <= 0) {
+			throw new IllegalArgumentException("Elevator number and floor number cannot be negative");
+		}
+		
 		System.out.printf("%s Sending Elevator %d to Floor %d.\n", Utilities.timeToString(), elevatorNumber, floorNumber);
 		ElevatorImpl e = getElevatorByNumber(elevatorNumber);
 		e.insertDestination(floorNumber);
@@ -113,16 +136,23 @@ public class Building implements FloorListener {
 		}
 	}
 	
-	
+	/**
+	 * Public void method queues requests that will be called once the Elevator reaches the Default Floor
+	 * @param elevatorNumber - Passed in elevator number to create FloorRequestDTO
+	 * @param floorNumber - Passed in floor number to create FloorRequestDTO
+	 */
 	public void queueElevatorToFloorUntilReachingDefault(int elevatorNumber, int floorNumber) {
+		if (elevatorNumber <= 0 || floorNumber <= 0) {
+			throw new IllegalArgumentException("Elevator number and floor number cannot be negative");
+		}
 		FloorRequestDTO fr = new FloorRequestDTO (elevatorNumber, floorNumber);
 		requests.add(fr);
 	}
 	
 	/**
 	 * Private implementation that retrieves the elevator by it's unique ID
-	 * @param elevatorNumber - The elevator number that it will be gotten by (1 through 6)
-	 * @return - The capable elevator.
+	 * @param elevatorNumber - The elevator number that the loop should be searching for
+	 * @return - The matched elevator.
 	 */
 	private ElevatorImpl getElevatorByNumber(int elevatorNumber) {
 		for (int i = 0; i < elevators.size(); i++) {
@@ -133,10 +163,10 @@ public class Building implements FloorListener {
 		
 		return null;
 	}
-	
+
 	/**
 	 * Public boolean that 'when' you reach the default floor, it checks again for more requests
-	 * @param elevatorNum - The elevator number (1-6)
+	 * @param elevatorNum - The elevator that reached the default floor
 	 */
 	@Override
 	public boolean elevatorDidReachBottomFloorWithRequests(int elevatorNum) {
