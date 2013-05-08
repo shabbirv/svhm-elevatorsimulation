@@ -1,4 +1,5 @@
 package Elevator;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -8,7 +9,6 @@ import Floor.Floor;
 import Floor.FloorListenerImpl;
 import Floor.FloorManager;
 import Floor.FloorRequestDTO;
-
 /**
  * An elevator implementation that creates an elevator
  * 
@@ -99,7 +99,8 @@ public class ElevatorImpl implements Elevator {
 	 * @param e - The elevator that will be assigned, based off number
 	 * @param floorNum - The default floor number that the elevator will return to after a timeout.
 	 */
-	public ElevatorImpl (int e, int floorNum) {
+	
+	public ElevatorImpl (int e, int floorNum) throws IllegalArgumentException {
 		
 		//Some initializer things
 		currentFloor = floorNum;
@@ -112,7 +113,7 @@ public class ElevatorImpl implements Elevator {
 	/**
 	 * Has the important loop of the elevator.  It runs constantly because it needs to check
 	 * for destinations that might have appeared in the queue.  After a certain amount of time
-	 * with no 'destinations', it will return to the default floor (that floor being 1)
+	 * with no 'destinations', it will return to the default floor
 	 */
 	@Override
 	public void run() {
@@ -213,7 +214,7 @@ public class ElevatorImpl implements Elevator {
 		}
 
 		//Loop ended, we have reached our destination
-		arriveAtDestination();
+		reachedDestination();
 	}
 	
 	/**
@@ -222,7 +223,7 @@ public class ElevatorImpl implements Elevator {
 	 * @see #toggleDoorOpen(boolean)
 	 * @throws InterruptedException
 	 */
-	private void arriveAtDestination() throws InterruptedException {
+	private void reachedDestination() throws InterruptedException {
 		System.out.printf("%s Elevator %d arrived at Floor %d. Opening Door\n", Utilities.timeToString(), elevatorNumber, currentFloor);
 		
 		//We've arrived so remove destination from ArrayList
@@ -235,7 +236,7 @@ public class ElevatorImpl implements Elevator {
 	
 	/**
 	 * Thread that opens/closes the door and the amount of time in milliseconds that it should take
-	 * @param open - The opening of the doors as it arrives at a destination or is called
+	 * @param open - Boolean check whether the door should be opened or closed
 	 * @throws InterruptedException - If the thread is interrupted during sleep
 	 */
 	private void toggleDoorOpen(boolean open) throws InterruptedException {
@@ -280,14 +281,14 @@ public class ElevatorImpl implements Elevator {
 	 * @param f - f is the floor that is being inserted into the destination
 	 */
 	public void insertDestination(int f) {
+		if(f <= 0 || f > FloorManager.getInstance().getNumberOfFloors()) {
+			throw new IllegalArgumentException("Cannot insert floor that is less than 1 or more than the total number of floors");
+		}
 
-		if (f == getCurrentFloor()) {
-			System.out.printf("%s Elevator %d requested Floor it is already on - ignored\n", Utilities.timeToString(), getElevatorNumber());
-			return;
-		} else if ((direction == ElevatorDirection.UP && f < getCurrentFloor())) {
+		if ((direction == ElevatorDirection.UP && (f < getCurrentFloor() || f == getCurrentFloor()))) {
 			System.out.printf("%s Elevator %d for Floor %d is not in the current direction of travel - ignored\n", Utilities.timeToString(), getElevatorNumber(), f);
 			return;
-		} else if ((direction == ElevatorDirection.DOWN) && f > getCurrentFloor()) {
+		} else if ((direction == ElevatorDirection.DOWN) && (f > getCurrentFloor() || f == getCurrentFloor())) {
 			System.out.printf("%s Elevator %d for Floor %d is not in the current direction of travel - ignored\n", Utilities.timeToString(), getElevatorNumber(), f);
 			return;
 		} 
@@ -321,8 +322,8 @@ public class ElevatorImpl implements Elevator {
 	}
 	
 	/**
-	 * This sorts the destinations.  If the elevator is going UP, it sorts (13, 12 and 14) to go
-	 * (12, 13, 14) and if the elevator is going down, it sorts (9, 10, and 6) to be (10, 9 and 6)
+	 * Sorts the destinations ArrayList based on which direction the Elevator is moving towards
+	 * Reverses the array if the elevator is moving down
 	 */
 	private void sortDestinations() {
 		if(direction == ElevatorDirection.UP)
@@ -332,6 +333,7 @@ public class ElevatorImpl implements Elevator {
 			Collections.reverse(destinations);
 		}
 	}
+	
 	//Javadoc above explains everything below
 	//Getters and Setters
 	
@@ -347,14 +349,14 @@ public class ElevatorImpl implements Elevator {
 		ElevatorImpl.idleTime = idleTime;
 	}
 	
-	private void setDefaultFloorNum(int floorNum) {
-		if(floorNum < 0 || floorNum > FloorManager.getInstance().getNumberOfFloors())
-			new Exception("Invalid Default Floor Chosen #" + floorNum);
-
+	private void setDefaultFloorNum(int floorNum) throws IllegalArgumentException {
+		if(floorNum <= 0 || floorNum > FloorManager.getInstance().getNumberOfFloors()) {
+			throw new IllegalArgumentException("Default floor cannot be less than 0 or greater than number of floors");
+		}
 		this.defaultFloorNum = floorNum;
 	}
 	
-	private int getDefaultFloor () {
+	public int getDefaultFloor () {
 		return defaultFloorNum;
 	}
 
