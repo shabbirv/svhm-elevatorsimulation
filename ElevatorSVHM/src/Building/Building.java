@@ -169,7 +169,7 @@ public class Building implements FloorListener {
 	 * @param elevatorNum - The elevator that reached the default floor
 	 */
 	@Override
-	public boolean elevatorDidReachBottomFloorWithRequests(int elevatorNum) {
+	public boolean elevatorDidReachDefaultWithRequests(int elevatorNum) {
 		//Checks if there are any Requests pending when reaching the Default Floor
 		boolean hasAdditionalRequests = false;
         Iterator<FloorRequestDTO> it = requests.iterator();

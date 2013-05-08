@@ -13,7 +13,7 @@ public class FloorListenerImpl {
         // Notify everybody that may be interested.
     	boolean hasAdditionalRequests = false;
         for (FloorListener fl : listeners)
-            hasAdditionalRequests = fl.elevatorDidReachBottomFloorWithRequests(elevatorNum);
+            hasAdditionalRequests = fl.elevatorDidReachDefaultWithRequests(elevatorNum);
         
         return hasAdditionalRequests;
     }
