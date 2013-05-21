@@ -16,4 +16,38 @@
 	</section>
 	<section name="quick_assist_proposal_size">
 	</section>
+	<section name="javadoc">
+		<item value="false" key="nodeprecatedlist"/>
+		<item value="false" key="notree"/>
+		<item value="true" key="splitindex"/>
+		<item value="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/bin/javadoc" key="javadoc_command_history"/>
+		<item value="true" key="use"/>
+		<item value="false" key="nonavbar"/>
+		<item value="private" key="access"/>
+		<item value="true" key="version"/>
+		<item value="false" key="nodeprecated"/>
+		<item value="/Users/shabbirv/Documents/2013Spring/Software Projects/svhm-elevatorsimulation/ElevatorSVHM/doc" key="destdir"/>
+		<item value="true" key="author"/>
+		<item value="" key="docletname"/>
+		<item value="1.6" key="source"/>
+		<item value="false" key="openinbrowser"/>
+		<item value="false" key="noindex"/>
+		<item value="" key="docletpath"/>
+		<item value="/Users/shabbirv/Documents/2013Spring/Software Projects/svhm-elevatorsimulation/ElevatorSVHM/javadoc.xml" key="antpath"/>
+		<item value="true" key="fromStandard"/>
+		<section name="projects">
+			<section name="ElevatorSVHM">
+				<item value="/Users/shabbirv/Documents/2013Spring/Software Projects/svhm-elevatorsimulation/ElevatorSVHM/doc" key="destdir"/>
+				<item value="/Users/shabbirv/Documents/2013Spring/Software Projects/svhm-elevatorsimulation/ElevatorSVHM/javadoc.xml" key="antpath"/>
+				<item value="" key="href"/>
+			</section>
+		</section>
+	</section>
+	<section name="JavadocWizardDialog">
+		<item value="600" key="DIALOG_WIDTH"/>
+		<item value="49" key="DIALOG_Y_ORIGIN"/>
+		<item value="582" key="DIALOG_HEIGHT"/>
+		<item value="420" key="DIALOG_X_ORIGIN"/>
+		<item value="1|Lucida Grande|11.0|0|COCOA|1|LucidaGrande" key="DIALOG_FONT_NAME"/>
+	</section>
 </section>
